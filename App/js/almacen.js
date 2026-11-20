@@ -54,7 +54,6 @@
         BD = {
             categorias: [...SEMILLA.categorias],
             libros: SEMILLA.libros.map(l => ({ ...l })),
-            semillaIds: SEMILLA.libros.map(l => l.id), // Libros de semilla.js ya incorporados
             usuarios: [await usr(1, 'admin', 'Administrador', 'admin', 'admin123'), await usr(2, 'lector', 'Lector Demo', 'lector', 'lector123'), await usr(3, 'bibliotecario', 'Bibliotecario', 'biblio', 'biblio123')],
             prestamos: [{ id: 1, libroId: 3, lectorId: 2, fecha: sumaDias(hoy(), -10), limite: sumaDias(hoy(), -3), devuelto: null, renovado: false, multaPagada: false }],
             reservas: [], solicitudes: [],
@@ -62,26 +61,6 @@
         };
         guardarBD();
     }
-
-    // Si se agregan libros o categorías nuevos en semilla.js, se incorporan solos (sin borrar nada de lo ya guardado).
-    // Un libro de semilla.js se incorpora una sola vez: si luego se elimina desde la aplicación, no reaparece.
-    function sincronizarSemilla() {
-        let cambio = false;
-        BD.semillaIds = BD.semillaIds || [1, 2, 3, 4, 5, 6]; // Datos guardados antes de esta mejora
-        SEMILLA.categorias.forEach(c => { if (!BD.categorias.includes(c)) { BD.categorias.push(c); cambio = true; } });
-        SEMILLA.libros.forEach(l => {
-            if (BD.semillaIds.includes(l.id)) return;
-            BD.semillaIds.push(l.id); cambio = true;
-            if (!BD.libros.some(x => x.isbn === l.isbn)) BD.libros.push({ ...l, id: BD.sig.libro++ });
-        });
-        if (cambio) guardarBD();
-    }
-
-    // Botón «Restablecer datos de ejemplo» del panel: borra lo guardado; al recargar vuelve a empezar de cero
-    window.reiniciarDatos = () => {
-        try { localStorage.removeItem(CLAVE); sessionStorage.removeItem(CLAVE_SESION); } catch { /* sin almacenamiento */ }
-        BD = null; sesionMem = 0;
-    };
 
     /* ----- Consultas y reglas ----- */
     const usuarioActual = () => BD.usuarios.find(u => u.id === verSesion()) || null;
@@ -384,7 +363,7 @@
        ========================================================================== */
     window.api = async function (ruta, cuerpo) {
         try {
-            if (!cargarBD()) await iniciar(); else sincronizarSemilla();
+            if (!cargarBD()) await iniciar();
             const d = cuerpo || {};
             const r = (await RUTAS[ruta]?.(texto(d.accion), d)) ?? fallo('Acción no válida.');
             if (r.ok && ruta !== 'datos' && !guardarBD()) return fallo('No se pudo guardar en el navegador (almacenamiento lleno o bloqueado).', 500);
