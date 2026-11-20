@@ -389,7 +389,8 @@ const vPanel = () => {
     const act = prestamos.filter(p => !p.devuelto);
     return vPanelBase()
         + barras('Gráfico: libros por categoría', CATS.map(c => [c, libros.filter(l => l.categoria === c).length]))
-        + barras('Gráfico: préstamos por estado', [['Activos al día', act.filter(p => dias(p.limite) >= 0).length], ['Vencidos', act.filter(p => dias(p.limite) < 0).length], ['Devueltos', prestamos.length - act.length], ['Reservas en espera', reservas.length]]);
+        + barras('Gráfico: préstamos por estado', [['Activos al día', act.filter(p => dias(p.limite) >= 0).length], ['Vencidos', act.filter(p => dias(p.limite) < 0).length], ['Devueltos', prestamos.length - act.length], ['Reservas en espera', reservas.length]])
+        + (usuario()?.rol === 'admin' ? tarjeta('Datos del sistema', '<p>Borra todo lo guardado (libros, préstamos, reservas y usuarios) y vuelve a los datos de ejemplo de semilla.js.</p><button class="btn btn-peligro" data-acc="reiniciar">Restablecer datos de ejemplo</button>') : '');
 };
 
 // Pantalla: mi perfil (cambiar nombre, correo y contraseña)
@@ -612,6 +613,7 @@ document.addEventListener('click', async e => {
     // --- Acciones que no cambian datos ---
     if (acc === 'cerrarMenu') return cerrarMenu();                       // Botón ✕ del menú lateral
     if (acc === 'imprimir') return window.print();                       // Imprime el informe
+    if (acc === 'reiniciar') { if (confirm('Se borrarán TODOS los datos guardados (libros, préstamos, reservas y usuarios) y volverán los datos de ejemplo. ¿Continuar?')) { reiniciarDatos(); location.reload(); } return; } // Solo aparece al administrador
     if (acc === 'cerrar') return $('#dlg').close();                      // Cierra la ventana de detalle
     if (acc === 'tema') return aplicarTema(document.documentElement.dataset.tema === 'oscuro' ? 'claro' : 'oscuro');
     if (acc === 'cancelar') editId = null;                               // Cancela la edición de un libro

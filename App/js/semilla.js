@@ -1,6 +1,6 @@
 /* Datos iniciales de ejemplo: se cargan una sola vez, la primera vez que se abre la aplicación. */
 const SEMILLA = {
-  categorias: ["Literatura", "Tecnología", "Ciencia", "Infantil", "Historia", "Otros"],
+  categorias: ["Literatura", "Tecnología", "Ciencia", "Infantil", "Historia", "Fantasía", "Otros"],
   libros: [
   {
     "id": 1,
@@ -67,6 +67,17 @@ const SEMILLA = {
     "copias": 3,
     "descripcion": "Cuento sobre un pequeño príncipe que viaja por distintos planetas y reflexiona sobre la amistad, el amor y la forma en que los adultos ven el mundo.",
     "portada": "assets/img/covers/libro_6.jpg"
+  },
+  {
+    "id": 7,
+    "categoria": "Fantasía",
+    "titulo": "Alas de Sangre",
+    "autor": "Rebeca Yarros",
+    "isbn": "LIB-007",
+    "anio": 2023,
+    "copias": 2,
+    "descripcion": "una joven de 20 años que espereba llevar su vida entre libros pero todo cambia cuando su madre la comandante general del colegio militar de guerra la obliga a ingresar al colegio para convertirse en jinete .",
+    "portada": null
   }
 ]
 };
