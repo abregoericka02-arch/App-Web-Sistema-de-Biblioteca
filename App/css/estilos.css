@@ -157,12 +157,12 @@ a:hover {
     justify-content: space-between;
     padding: 0.85rem 1.25rem;
 }
-
+/*color del tecto del logo biblioteca*/
 .logo-biblioteca {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #FFFFFF;
+    color: #faf5f5;
     text-decoration: none;
     font-family: var(--fuente-titulos);
     font-size: 1.35rem;
